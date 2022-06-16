@@ -39,4 +39,8 @@ interface AmphibianApiService {
 }
 
 // TODO: Create an object that provides a lazy-initialized retrofit service
-
+object AmphibianApi {
+    val retrofitService : AmphibianApiService by lazy {
+        retrofit.create(AmphibianApiService::class.java)
+    }
+}
