@@ -18,8 +18,10 @@ package com.example.amphibians.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.amphibians.network.Amphibian
 import com.example.amphibians.network.AmphibianApi
+import kotlinx.coroutines.launch
 
 enum class AmphibianApiStatus {LOADING, ERROR, DONE}
 
@@ -40,6 +42,19 @@ class AmphibianViewModel : ViewModel() {
 
     // TODO: Create a function that gets a list of amphibians from the api service and sets the
     //  status via a Coroutine
+    fun getAmphibianList(){
+        viewModelScope.launch {
+            _status.value = AmphibianApiStatus.LOADING
+            try{
+                _amphibians.value = AmphibianApi.retrofitService.getAmphibianList()
+                _status.value = AmphibianApiStatus.DONE
+            }catch (e: Exception){
+                _amphibians.value = emptyList()
+                _status.value = AmphibianApiStatus.ERROR
+
+            }
+        }
+    }
 
     fun onAmphibianClicked(amphibian: Amphibian) {
         // TODO: Set the amphibian object
